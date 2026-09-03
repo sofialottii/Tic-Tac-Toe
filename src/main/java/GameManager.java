@@ -11,4 +11,4 @@ public interface GameManager extends Remote {
 
 }
 
-/* interfaccia sempre attiva che tutti i client possono cercare per dire che vogliono giocare */
+/* interfaccia che tutti i client possono cercare per dire che vogliono giocare */
