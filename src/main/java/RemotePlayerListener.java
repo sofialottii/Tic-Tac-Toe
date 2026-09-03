@@ -7,11 +7,9 @@ public interface RemotePlayerListener extends Remote {
 
     void opponentJoined() throws RemoteException;
 
-    //il server chiama questo metodo per passare la scacchiera aggiornata al client
-    void onGameUpdate(char[][] board, boolean isYourTurn) throws RemoteException;
+    void onGameUpdate(char[] board, boolean isYourTurn) throws RemoteException;
 
-    //il server chiama questo metodo per avvisare che la partita è finita
-    void onGameOver(String winner) throws RemoteException;
+    String onGameOver() throws RemoteException;
 
 }
 
@@ -27,6 +25,6 @@ onGameUpdate: ogni volta che un giocatore fa la sua mossa, il server aggiorna la
 isYourTurn, altrimenti va tenuta. Da capire bene)
 
 onGameOver: viene ricevuto quando il server capisce che il gioco è finito (o è stato fatto tris, oppure la
-griglia è piena)
+griglia è piena). Dovrà returnare il winner, per questo è uno String
 
  */
