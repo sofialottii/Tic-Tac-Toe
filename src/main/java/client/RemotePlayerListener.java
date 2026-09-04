@@ -5,11 +5,14 @@ import java.rmi.RemoteException;
 
 public interface RemotePlayerListener extends Remote {
 
+
     void opponentJoined() throws RemoteException;
 
     void onGameUpdate(String[] board, boolean isYourTurn) throws RemoteException;
 
     String onGameOver() throws RemoteException;
+
+    String getName() throws RemoteException;
 
 }
 

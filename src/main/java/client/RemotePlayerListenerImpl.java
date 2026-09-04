@@ -27,6 +27,11 @@ public class RemotePlayerListenerImpl implements RemotePlayerListener {
         return "";
     }
 
+    @Override
+    public String getName() throws RemoteException {
+        return this.playerName;
+    }
+
     public String getPlayerName() {
         return this.playerName;
     }

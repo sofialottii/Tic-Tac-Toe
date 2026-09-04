@@ -1,8 +1,10 @@
 package main.java.client;
 
 import main.java.GameManager;
+import main.java.GameSession;
 
 import javax.swing.*;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -23,7 +25,7 @@ public class RunClientTTT {
         try {
 
             Registry registry = LocateRegistry.getRegistry(host);
-            var manager = (GameManager) registry.lookup("ManagerObj");
+            var manager = (GameManager) registry.lookup("GameManager");
 
             var l = new RemotePlayerListenerImpl(userName);
             var lproxy = (RemotePlayerListener) UnicastRemoteObject.exportObject(l, 0);
@@ -36,36 +38,51 @@ public class RunClientTTT {
             } while (!Objects.equals(mode, "c") && !Objects.equals(mode, "j"));
 
             String roomName;
-
+            GameSession game;
             //se la modalità è creare:
             if (mode.equals("c")) {
                 System.out.println("Choose room's name: ");
                 roomName = myObj.nextLine();
-                while(!manager.createGame(roomName, lproxy)) {
+                game = manager.createGame(roomName, lproxy);
+                while(game == null) {
                     System.out.println("Room already exists. Choose another name: ");
                     roomName =  myObj.nextLine();
-                };
+                    game = manager.createGame(roomName, lproxy);
+                }
             } else { //se la modalità è joinare:
                 System.out.println("Choose room's name to join: ");
                 roomName = myObj.nextLine();
-                while(!manager.joinGame(roomName, lproxy)) {
+                game = manager.joinGame(roomName, lproxy);
+                while(game == null) {
                     System.out.println("Room does not exist. Choose another name to join: ");
                     roomName =  myObj.nextLine();
-                };
+                    game = manager.joinGame(roomName, lproxy);
+                }
             }
 
-            //creazione GUI
-            String finalRoomName = roomName;
+            GameSession finalGame = game;
             SwingUtilities.invokeLater(() -> {
                 // Immaginiamo di essere il client di "Marco"
-                ClientGUI client = new ClientGUI(finalRoomName, "Luca", "Marco", "Marco");
+                ClientGUI client = null;
+                try {
+                    client = new ClientGUI(finalGame.getGameName(),
+                            finalGame.getPlayer1Name(), finalGame.getPlayer2Name(), userName);
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
                 client.setVisible(true);
 
                 // Simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
+                ClientGUI finalClient = client;
                 Timer timer = new Timer(1000, e -> {
-                    String[] fakeBoard = {"", "", "", "", "", "", "", "", "X"};
                     // Passo "Marco" come giocatore attivo, quindi i bottoni si abiliteranno
-                    client.updateGameState(fakeBoard, "Marco", null);
+                    try {
+                        finalClient.updateGameState(finalGame.getBoard(),
+                                finalGame.isPlayer1Turn() ? finalGame.getPlayer1Name() : finalGame.getPlayer2Name(),
+                                null);
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 });
                 timer.setRepeats(false);
                 timer.start();
