@@ -82,4 +82,28 @@ public class GameSessionImpl implements GameSession{
     public String getGameName() {
         return this.gameName;
     }
+
+    @Override
+    public String getPlayer1Name() throws RemoteException {
+        return this.player1.getName();
+    }
+
+    @Override
+    public String getPlayer2Name() throws RemoteException {
+        if (this.player2 == null) {
+            return "In attesa...";
+        }
+        return this.player2.getName();
+    }
+
+    @Override
+    public String[] getBoard() throws RemoteException {
+        return this.board;
+    }
+
+    @Override
+    public boolean isPlayer1Turn() throws RemoteException {
+        return this.isPlayer1Turn;
+    }
+
 }
