@@ -7,9 +7,9 @@ import java.rmi.RemoteException;
 
 public interface GameManager extends Remote {
 
-    boolean createGame(String gameName, RemotePlayerListener myListener) throws RemoteException;
+    GameSession createGame(String gameName, RemotePlayerListener myListener) throws RemoteException;
 
-    boolean joinGame(String gameName, RemotePlayerListener myListener) throws RemoteException;
+    GameSession joinGame(String gameName, RemotePlayerListener myListener) throws RemoteException;
 
 }
 
