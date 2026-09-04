@@ -203,7 +203,7 @@ public class ClientGUI extends JFrame {
 
             // Simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
             Timer timer = new Timer(1000, e -> {
-                String[] fakeBoard = {"X", "O", "", "O", "X", "", "", "", "X"};
+                String[] fakeBoard = {"", "", "", "", "", "", "", "", "X"};
                 // Passo "Marco" come giocatore attivo, quindi i bottoni si abiliteranno
                 client.updateGameState(fakeBoard, "Marco", null);
             });
