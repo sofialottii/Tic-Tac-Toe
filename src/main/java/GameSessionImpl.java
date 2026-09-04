@@ -24,6 +24,7 @@ public class GameSessionImpl implements GameSession{
         super();
         this.gameName = gameName;
         this.player1 = player1;
+        this.board = new String[9];
         for(int i = 0; i < 9; i++) {
             board[i] = " ";
         }
@@ -34,7 +35,7 @@ public class GameSessionImpl implements GameSession{
     public void addSecondPlayer(RemotePlayerListener player2) throws RemoteException {
         this.player2 = player2;
 
-        player1.opponentJoined(); //si sveglia l'avversario 1??????
+        player1.opponentJoined(); //si sveglia l'avversario 1
     }
 
     @Override
@@ -43,7 +44,6 @@ public class GameSessionImpl implements GameSession{
         final String move = isPlayer1Turn ? "X" : "O";
 
         board[pos] = move;
-        isPlayer1Turn = !isPlayer1Turn;
 
         moveCount++;
 
@@ -57,6 +57,7 @@ public class GameSessionImpl implements GameSession{
             player1.onGameOver();
             player2.onGameOver();
         } else {
+            isPlayer1Turn = !isPlayer1Turn;
             player1.onGameUpdate(board, isPlayer1Turn);
             player2.onGameUpdate(board, !isPlayer1Turn);
         }

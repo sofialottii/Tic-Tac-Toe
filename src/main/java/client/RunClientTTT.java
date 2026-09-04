@@ -38,7 +38,7 @@ public class RunClientTTT {
             String roomName;
 
             //se la modalità è creare:
-            if (mode == "c") {
+            if (mode.equals("c")) {
                 System.out.println("Choose room's name: ");
                 roomName = myObj.nextLine();
                 while(!manager.createGame(roomName, lproxy)) {
