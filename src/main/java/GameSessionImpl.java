@@ -1,18 +1,81 @@
 package main.java;
 
+import main.java.client.RemotePlayerListener;
+
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 public class GameSessionImpl implements GameSession{
 
-    private String gameName;
+    private static final int[][] winningCombinations = {
+            {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, //riga 1, 2 e 3
+            {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, //colonna 1, 2 e 3
+            {0, 4, 8}, {2, 4, 6}  //diagonali
+    };
 
-    public GameSessionImpl(String gameName) throws RemoteException {
+    private final String gameName;
+    private final RemotePlayerListener player1;
+    private RemotePlayerListener player2;
+    private String[] board;
+    private boolean isPlayer1Turn;
+    private int moveCount;
+
+    public GameSessionImpl(String gameName, RemotePlayerListener player1) throws RemoteException {
+        super();
         this.gameName = gameName;
+        this.player1 = player1;
+        for(int i = 0; i < 9; i++) {
+            board[i] = " ";
+        }
+        this.isPlayer1Turn = true;  //poi diventerà random se fede lo farà
+        this.moveCount = 0;
+    }
+
+    public void addSecondPlayer(RemotePlayerListener player2) throws RemoteException {
+        this.player2 = player2;
+
+        player1.opponentJoined(); //si sveglia l'avversario 1??????
     }
 
     @Override
     public void makeMove(int pos) throws RemoteException {
 
+        final String move = isPlayer1Turn ? "X" : "O";
+
+        board[pos] = move;
+        isPlayer1Turn = !isPlayer1Turn;
+
+        moveCount++;
+
+        if (checkWin(move)) {
+            System.out.println("Ha vinto il giocatore " + (isPlayer1Turn ? "player1" : "player2")); //ricordiamoci di mettere player1.getName e player2.getName
+            //todo
+            player1.onGameOver();
+            player2.onGameOver();
+        } else if (moveCount == 9) {
+            System.out.println("PARI");
+            player1.onGameOver();
+            player2.onGameOver();
+        } else {
+            player1.onGameUpdate(board, isPlayer1Turn);
+            player2.onGameUpdate(board, !isPlayer1Turn);
+        }
+
+    }
+
+    private boolean checkWin(String symbol) {
+
+        for (int[] combination : winningCombinations) {
+            //controlliamo se le 3 celle della combinazione contengono tutte lo stesso simbolo
+            //simbolo è X oppure O
+            if (Objects.equals(board[combination[0]], symbol) &&
+                    Objects.equals(board[combination[1]], symbol) &&
+                    Objects.equals(board[combination[2]], symbol)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String getGameName() {

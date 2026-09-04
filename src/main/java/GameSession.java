@@ -11,3 +11,5 @@ public interface GameSession extends Remote {
 }
 
 /* la griglia non è vista come una row;col, ma è una posizione che va da 0 a 8*/
+
+//bisogna passare il parametro di riferimento del client

@@ -137,9 +137,9 @@ public class ClientGUI extends JFrame {
      * Metodo chiamato dal client RMI quando riceve un aggiornamento dal server.
      * Aggiorna passivamente l'interfaccia.
      *
-     * @param boardArray Array di 9 stringhe ("X", "O", o "")
+     * @param boardArray       Array di 9 stringhe ("X", "O", o "")
      * @param activePlayerName Il nome del giocatore che deve fare la mossa
-     * @param winnerName Nome del vincitore, "Draw" per pareggio, o null se in corso
+     * @param winnerName       Nome del vincitore, "Draw" per pareggio, o null se in corso
      */
     public void updateGameState(String[] boardArray, String activePlayerName, String winnerName) {
         // 1. Aggiorna la griglia
@@ -193,9 +193,10 @@ public class ClientGUI extends JFrame {
             }
         }
     }
+}
 
     // MAIN per testare graficamente il Client
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             // Immaginiamo di essere il client di "Marco"
             ClientGUI client = new ClientGUI("bombo clat", "Luca", "Marco", "Marco");
@@ -211,4 +212,4 @@ public class ClientGUI extends JFrame {
             timer.start();
         });
     }
-}
+}*/
