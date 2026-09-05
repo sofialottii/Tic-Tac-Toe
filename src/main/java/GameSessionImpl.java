@@ -28,7 +28,7 @@ public class GameSessionImpl implements GameSession{
         for(int i = 0; i < 9; i++) {
             board[i] = " ";
         }
-        this.isPlayer1Turn = true;  //poi diventerà random se fede lo farà
+        this.isPlayer1Turn = true;  //poi diventerà random se fede lo farà TODO
         this.moveCount = 0;
     }
 

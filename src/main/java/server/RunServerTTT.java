@@ -8,22 +8,18 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 public class RunServerTTT {
-
     public static void main(String[] args) {
 
         try {
-
             GameManager manager = new GameManagerImpl();
 
             var gameStub = (GameManager) UnicastRemoteObject.exportObject(manager, 0);
 
-            //try creato in modo che se la porta è già in uso, viene liberata
+            //try creato in modo che se la porta è già occupata, recupera il registro esistente
             Registry registry;
             try {
-                //prova a creare un nuovo registro RMI
                 registry = LocateRegistry.createRegistry(1099);
             } catch (java.rmi.server.ExportException e) {
-                //se la porta 1099 è già occupata, recupera il registro esistente
                 registry = LocateRegistry.getRegistry(1099);
             }
 

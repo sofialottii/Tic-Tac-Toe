@@ -93,10 +93,9 @@ public class ClientGUI extends JFrame {
                 if (!cells[cellIndex].getText().trim().isEmpty()) return;
 
                 try {
-                    // Chiama il metodo remoto sul server
                     session.makeMove(cellIndex);
                 } catch (RemoteException ex) {
-                    System.err.println("Errore di connessione durante la mossa: " + ex.getMessage());
+                    throw new RuntimeException(ex);
                 }
             });
 
