@@ -11,21 +11,18 @@ import java.rmi.RemoteException;
 
 public class ClientGUI extends JFrame {
 
-    // Componenti UI che devono essere aggiornati dinamicamente
-    private JLabel titleLabel;
-    private JLabel p1NameLabel;
-    private JLabel p1StatusLabel; // Per "Attendi" / "È il tuo turno"
-    private JLabel p2NameLabel;
-    private JLabel p2StatusLabel; // Per "Attendi" / "È il tuo turno"
-    private JButton[] cells;
-    private JLabel bottomStatusLabel;
+    private final JLabel p1NameLabel;
+    private final JLabel p1StatusLabel; // Per "Attendi" / "È il tuo turno"
+    private final JLabel p2NameLabel;
+    private final JLabel p2StatusLabel; // Per "Attendi" / "È il tuo turno"
+    private final JButton[] cells;
+    private final JLabel bottomStatusLabel;
 
     // Dati del client locale
-    private String localPlayerName;
-    private GameSession session; //riferimento alla partita
+    private final String localPlayerName;
 
     public ClientGUI(GameSession session, String gameName, String p1Name, String p2Name, String localPlayerName) {
-        this.session = session;
+        //riferimento alla partita
         this.localPlayerName = localPlayerName;
 
         setTitle("Distributed TTT - Client di " + localPlayerName);
@@ -34,7 +31,8 @@ public class ClientGUI extends JFrame {
         getContentPane().setBackground(Color.WHITE);
 
         // Pannello superiore: Titolo della partita
-        titleLabel = new JLabel("Nome partita: " + gameName, SwingConstants.CENTER);
+        // Componenti UI che devono essere aggiornati dinamicamente
+        JLabel titleLabel = new JLabel("Nome partita: " + gameName, SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.PLAIN, 26));
         titleLabel.setForeground(Color.RED);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));

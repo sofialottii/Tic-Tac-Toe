@@ -63,6 +63,7 @@ public class RunClientTTT {
 
             //creazione della GUI
             GameSession finalGame = game;
+
             SwingUtilities.invokeLater(() -> {
 
                 ClientGUI client = null;
@@ -74,9 +75,10 @@ public class RunClientTTT {
                 }
                 l.setGUI(client);
                 client.setVisible(true);
-
                 //simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
                 ClientGUI finalClient = client;
+
+
                 Timer timer = new Timer(1000, e -> {
 
                     try {
