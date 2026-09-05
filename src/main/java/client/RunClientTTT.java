@@ -11,11 +11,16 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Objects;
 import java.util.Scanner;
 
+/**
+ * Classe di avvio per il client del gioco Tris.
+ * Gestisce la connessione al registro RMI, l'interazione da terminale per la creazione/join
+ * a una partita e l'inizializzazione della GUI.
+ */
 public class RunClientTTT {
 
     public static void main(String[] args) {
 
-        String host = (args.length < 1) ? null : args[0];
+        String host = (args.length < 1) ? null : args[0]; //nel caso in cui sia passato argomento da riga di comando
 
         //inseriamo nome da terminale:
         Scanner myObj = new Scanner(System.in);
@@ -66,13 +71,15 @@ public class RunClientTTT {
 
             SwingUtilities.invokeLater(() -> {
 
-                ClientGUI client = null;
+                ClientGUI client;
                 try {
                     client = new ClientGUI(finalGame, finalGame.getGameName(),
                             finalGame.getPlayer1Name(), finalGame.getPlayer2Name(), userName);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
+                //associa la GUI al listener per poter aggiornare l'interfaccia
+                //quando arrivano messaggi dal server
                 l.setGUI(client);
                 client.setVisible(true);
 

@@ -1,12 +1,12 @@
 [![it](https://img.shields.io/badge/lang-it-green.svg)](README.it.md)   [![en](https://img.shields.io/badge/lang-en-orange.svg)](README.md)
 
-# Tic-Tac-Toe
+# ❌ Tic-Tac-Toe ⭕
 
 *[Leggi in italiano](README.it.md)*
 
 Distributed system for playing Tic-Tac-Toe, developed for the PCD course.
 
-## First time setup
+## First time setup 🖥️
 
 You need to have Maven installed!
 https://maven.apache.org/download.cgi
@@ -38,7 +38,7 @@ C:\Program Files\apache-maven-3.9.16-bin\apache-maven-3.9.16\bin
 (Warning: The examples above can only be copied by those who have installed apache-maven-3.9.16
 and correctly moved the folder to `C:\Program Files`.)
 
-## How to run the project
+## How to run the project 💫
 
 In the first terminal:
 ```
@@ -64,12 +64,12 @@ game created by the previous client):
 java -cp target/classes main.java.client.RunClientTTT
 ```
 
-## If it still doesn't work...
+## If it still doesn't work... 🔨
 
 - Check that the source root is just `src`
 - Check that the `pom.xml` file is being interpreted correctly
 
-## Playing on different devices on the same LAN
+## Playing on different devices on the same LAN 🛜
 
 You can use different computers to play the same game.
 
@@ -82,3 +82,11 @@ Steps:
    is the server address found in the previous step
 3. Keep in mind that the preliminary steps are the same on both the client and the server as described in
    previous sections (Maven must be correctly installed, and `rmiregistry` must be running).
+
+## Screenshots 📸
+
+Match in progress:
+![partita-in-corso](images/partita-in-corso.png)
+
+Match over:
+![partita-finita](images/partita-finita.png)

@@ -16,7 +16,7 @@ public class GameSessionImpl implements GameSession{
     private final String gameName;
     private final RemotePlayerListener player1;
     private RemotePlayerListener player2;
-    private String[] board;
+    private final String[] board;
     private boolean isPlayer1Turn;
     private int moveCount;
 
@@ -28,7 +28,7 @@ public class GameSessionImpl implements GameSession{
         for(int i = 0; i < 9; i++) {
             board[i] = "";
         }
-        this.isPlayer1Turn = true;  //poi diventerà random se fede lo farà TODO
+        this.isPlayer1Turn = true;
         this.moveCount = 0;
     }
 
@@ -49,7 +49,7 @@ public class GameSessionImpl implements GameSession{
 
         board[pos] = move;
 
-        moveCount++;
+        moveCount++; //variabile per verificare se la partita è finita in parità
 
         if (checkWin(move)) {
             String winner = isPlayer1Turn ? this.player1.getName() : this.player2.getName();
@@ -57,10 +57,10 @@ public class GameSessionImpl implements GameSession{
             player1.onGameOver(board, winner);
             player2.onGameOver(board, winner);
         } else if (moveCount == 9) {
-            System.out.println("PARI");
+            System.out.println("DRAW");
             player1.onGameOver(board, "Draw");
             player2.onGameOver(board, "Draw");
-        } else {
+        } else { //se la partita non è finita, si aggiorna il turno
             isPlayer1Turn = !isPlayer1Turn;
             String activeName = isPlayer1Turn ? player1.getName() : player2.getName();
             player1.onGameUpdate(board, activeName);
@@ -70,7 +70,6 @@ public class GameSessionImpl implements GameSession{
     }
 
     private boolean checkWin(String symbol) {
-
         for (int[] combination : winningCombinations) {
             //controlliamo se le 3 celle della combinazione contengono tutte lo stesso simbolo
             //simbolo è X oppure O
@@ -80,7 +79,6 @@ public class GameSessionImpl implements GameSession{
                 return true;
             }
         }
-
         return false;
     }
 
@@ -100,15 +98,4 @@ public class GameSessionImpl implements GameSession{
         }
         return this.player2.getName();
     }
-
-    @Override
-    public String[] getBoard() throws RemoteException {
-        return this.board;
-    }
-
-    @Override
-    public boolean isPlayer1Turn() throws RemoteException {
-        return this.isPlayer1Turn;
-    }
-
 }

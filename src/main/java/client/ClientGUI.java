@@ -8,6 +8,10 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
+/**
+ * Interfaccia grafica (GUI) del client. Gestisce la renderizzazione della griglia,
+ * le label di stato dei giocatori
+ */
 public class ClientGUI extends JFrame {
 
     private final JLabel p1NameLabel;
@@ -17,7 +21,7 @@ public class ClientGUI extends JFrame {
     private final JButton[] cells;
     private final JLabel bottomStatusLabel; //who's turn or who is the winner
 
-    // Dati del client locale
+    //nomi player local e altro player
     private final String localPlayerName;
     private final String remotePlayerName;
 
@@ -32,22 +36,21 @@ public class ClientGUI extends JFrame {
         setLayout(new BorderLayout(20, 20));
         getContentPane().setBackground(Color.WHITE);
 
-        // Pannello superiore: Titolo della partita
-        // Componenti UI che devono essere aggiornati dinamicamente
+        //pannello superiore -> titolo partita
         JLabel titleLabel = new JLabel("Nome partita: " + gameName, SwingConstants.CENTER);
         titleLabel.setFont(new Font("SansSerif", Font.PLAIN, 26));
         titleLabel.setForeground(Color.RED);
         titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
         add(titleLabel, BorderLayout.NORTH);
 
-        // Pannello centrale: Giocatori e Griglia
+        //pannello centrale: -> giocatori e griglia
         JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(0, 30, 0, 30);
         gbc.fill = GridBagConstraints.VERTICAL;
 
-        // Giocatore 1 (Sinistra) - 3 righe ora
+        //giocatore 1 -> sinistra
         JPanel p1Panel = new JPanel(new GridLayout(3, 1));
         p1Panel.setBackground(Color.WHITE);
         JLabel p1Label = new JLabel("Player 1:");
@@ -68,7 +71,7 @@ public class ClientGUI extends JFrame {
         gbc.gridx = 0;
         centerPanel.add(p1Panel, gbc);
 
-        // Griglia di gioco (Centro)
+        //griglia di gioco centrale
         JPanel boardPanel = new JPanel(new GridLayout(3, 3));
         boardPanel.setBackground(Color.WHITE);
         boardPanel.setBorder(new LineBorder(Color.GRAY, 2, true));
@@ -76,20 +79,21 @@ public class ClientGUI extends JFrame {
 
         cells = new JButton[9];
         for (int i = 0; i < 9; i++) {
-            final int cellIndex = i; // Necessario per la lambda
+            final int cellIndex = i;
             cells[i] = new JButton("");
+            cells[i].setEnabled(false); //quando si aspetta il 2 gioc, non si può cliccare nelle celle
             cells[i].setFont(new Font("SansSerif", Font.PLAIN, 50));
-            cells[i].setFocusPainted(false); // Rimuove il rettangolino di focus
-            cells[i].setContentAreaFilled(false); // Sfondo trasparente come una label
+            cells[i].setFocusPainted(false); //per rimuovere il rettangolino di focus
+            cells[i].setContentAreaFilled(false); //sfondo trasparente
             cells[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             int topBorder = (i > 2) ? 2 : 0;
             int leftBorder = (i % 3 != 0) ? 2 : 0;
             cells[i].setBorder(BorderFactory.createMatteBorder(topBorder, leftBorder, 0, 0, Color.BLACK));
 
-            // L'azione del click: DEVE SOLO INVIARE LA RICHIESTA AL SERVER
+            //quando viene cliccata una cella:
             cells[i].addActionListener(e -> {
-                // Se la cella non è vuota, ignora il click
+                //se la cella non è vuota, ignora il click
                 if (!cells[cellIndex].getText().trim().isEmpty()) return;
 
                 try {
@@ -105,7 +109,7 @@ public class ClientGUI extends JFrame {
         gbc.gridx = 1;
         centerPanel.add(boardPanel, gbc);
 
-        // Giocatore 2 (Destra) - 3 righe ora
+        //giocatore 2 -> destra
         JPanel p2Panel = new JPanel(new GridLayout(3, 1));
         p2Panel.setBackground(Color.WHITE);
         JLabel p2Label = new JLabel("Player 2:");
@@ -128,7 +132,7 @@ public class ClientGUI extends JFrame {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        // Pannello inferiore: stato della partita
+        //pannello inferiore -> stato della partita
         bottomStatusLabel = new JLabel("In attesa del server...", SwingConstants.CENTER);
         bottomStatusLabel.setFont(new Font("SansSerif", Font.PLAIN, 26));
         bottomStatusLabel.setForeground(Color.BLACK);
@@ -139,24 +143,31 @@ public class ClientGUI extends JFrame {
         setSize(700, 400);
         setLocationRelativeTo(null);
     }
+
+    /**
+     * Aggiorna dinamicamente il nome dell'avversario nell'interfaccia grafica.
+     * Usato quando il creatore della stanza è in attesa e un player 2 si connette.
+     *
+     * @param newName Nome del giocatore appena connesso
+     */
     public void updatePlayer2Name(String newName) {
         p2NameLabel.setText(newName);
-        // Assicurati che l'interfaccia si ridisegni correttamente
+
         p2NameLabel.revalidate();
         p2NameLabel.repaint();
     }
+
     /**
      * Metodo chiamato dal client RMI quando riceve un aggiornamento dal server.
      * Aggiorna passivamente l'interfaccia.
      *
-     * @param boardArray       Array di 9 stringhe ("X", "O", o "")
+     * @param boardArray Array di 9 stringhe ("X", "O", o "")
      * @param activePlayerName Il nome del giocatore che deve fare la mossa
-     * @param winnerName       Nome del vincitore, "Draw" per pareggio, o null se in corso
+     * @param winnerName Nome del vincitore, "Draw" per pareggio, o null se in corso
      */
     public void updateGameState(String[] boardArray, String activePlayerName, String winnerName) {
-        // 1. Aggiorna la griglia
+        //aggiornamento griglia
         for (int i = 0; i < 9; i++) {
-            String val = boardArray[i] == null ? " " : boardArray[i];
             cells[i].setText(boardArray[i]);
             if (boardArray[i].equals("X")) {
                 cells[i].setForeground(Color.BLUE);
@@ -165,9 +176,9 @@ public class ClientGUI extends JFrame {
             }
         }
 
-        // 2. Aggiorna lo stato di fine partita o turno
+        //aggiornamento turno / stato di fine partita
         if (winnerName != null) {
-            // Fine partita (disabilita griglia)
+            //con la fine partita viene disabilitata la griglia)
             for (JButton cell : cells) cell.setEnabled(false);
 
             p1StatusLabel.setText("");
@@ -178,11 +189,11 @@ public class ClientGUI extends JFrame {
                 bottomStatusLabel.setForeground(Color.BLACK);
             } else {
                 bottomStatusLabel.setText("Vittoria " + winnerName + "!!");
-                // Imposta colore blu se vince P2, rosso se vince P1 (adattalo alla tua logica)
+                //blu se vince P2, rosso se vince P1
                 bottomStatusLabel.setForeground(winnerName.equals(p2NameLabel.getText()) ? new Color(50, 50, 200) : Color.RED);
             }
         } else {
-            // Partita in corso: chi deve giocare?
+            //controlli per far vedere graficamente chi deve giocare
             bottomStatusLabel.setText("Turno di " + (Objects.equals(activePlayerName, "") ? remotePlayerName : activePlayerName));
             bottomStatusLabel.setForeground(Color.BLACK);
 
@@ -198,10 +209,9 @@ public class ClientGUI extends JFrame {
                 p1StatusLabel.setForeground(Color.GRAY);
             }
 
-            // Abilita/Disabilita i bottoni in base al turno del giocatore locale
             boolean isMyTurn = activePlayerName.equals(this.localPlayerName);
             for (JButton cell : cells) {
-                // Il bottone è abilitato solo se è il mio turno E la cella è vuota
+                //il bottone è abilitato solo se è il mio turno e la cella è vuota
                 cell.setEnabled(isMyTurn && cell.getText().isEmpty());
             }
         }
