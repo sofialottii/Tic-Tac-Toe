@@ -68,3 +68,17 @@ java -cp target/classes main.java.client.RunClientTTT
 
 - Check that the source root is just `src`
 - Check that the `pom.xml` file is being interpreted correctly
+
+## Playing on different devices on the same LAN
+
+You can use different computers to play the same game.
+
+Steps:
+1. A computer designated as the server will execute the command
+   ``` java -cp target/classes main.java.server.RunServerTTT <ip-address>```.
+   The IP address can be found by running the `ipconfig` command in any terminal ![ip-address](images/indirizzo-ip.png)
+2. Any computer on the LAN can connect as a client by running the command
+   ``` java -cp target/classes main.java.client.RunClientTTT <server-ip-address> ```, where *server-ip-address*
+   is the server address found in the previous step
+3. Keep in mind that the preliminary steps are the same on both the client and the server as described in
+   previous sections (Maven must be correctly installed, and `rmiregistry` must be running).

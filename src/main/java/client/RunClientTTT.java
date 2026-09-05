@@ -75,22 +75,7 @@ public class RunClientTTT {
                 }
                 l.setGUI(client);
                 client.setVisible(true);
-                //simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
-                ClientGUI finalClient = client;
 
-
-                Timer timer = new Timer(1000, e -> {
-
-                    try {
-                        finalClient.updateGameState(finalGame.getBoard(),
-                                finalGame.isPlayer1Turn() ? finalGame.getPlayer1Name() : finalGame.getPlayer2Name(),
-                                null);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
-                timer.setRepeats(false);
-                timer.start();
             });
 
 

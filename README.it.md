@@ -58,8 +58,21 @@ joinare la partita creata dal precedente client):
 java -cp target/classes main.java.client.RunClientTTT
 ```
 
-
 ## Se ancora non funziona...
 
 - Controlla che la source root sia solo `src`
 - Controlla che il file `pom.xml` sia interpretato correttamente
+
+## Partite su dispostivi diversi nella stessa rete LAN
+
+È possibile utilizzare calcolatori diversi per giocare una stessa partita.
+
+Passaggi fondamentali:
+1. Un calcolatore designato alla funzione di server, eseguirà il comando
+``` java -cp target/classes main.java.server.RunServerTTT <indirizzo-ip>```. 
+L'indirizzo IP si può trovare eseguendo il comando `ipconfig` su un qualsiasi terminale ![ip-address](images/indirizzo-ip.png)
+2. Qualsiasi calcolatore appartenente alla rete LAN può connettersi come client eseguendo il comando
+``` java -cp target/classes main.java.client.RunClientTTT <indirizzo-ip-server> ```, dove *indirizzo-ip-server* è
+l'indirizzo del server precedentemente trovato
+3. Tenere a mente che sia sul client che sul server, i passaggi preliminari sono gli stessi visti nei
+precedenti paragrafi (maven deve essere correttamente installato e deve essere eseguito rmiregistry).
