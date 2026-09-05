@@ -25,7 +25,6 @@ public class RemotePlayerListenerImpl implements RemotePlayerListener {
     public void onGameUpdate(String[] board, boolean isYourTurn) throws RemoteException {
         if (gui != null) {
             String activePlayerName = isYourTurn ? playerName : "Avversario";
-
             //passiamo l'aggiornamento al thread della GUI
             SwingUtilities.invokeLater(() -> gui.updateGameState(board, activePlayerName, null));
         }

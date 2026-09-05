@@ -36,6 +36,9 @@ public class GameSessionImpl implements GameSession{
         this.player2 = player2;
 
         player1.opponentJoined(); //si sveglia l'avversario 1
+        player1.onGameUpdate(this.board, isPlayer1Turn);
+        player2.onGameUpdate(this.board, !isPlayer1Turn);
+
     }
 
     @Override
@@ -48,8 +51,8 @@ public class GameSessionImpl implements GameSession{
         moveCount++;
 
         if (checkWin(move)) {
-            System.out.println("Ha vinto il giocatore " + (isPlayer1Turn ? "player1" : "player2")); //ricordiamoci di mettere player1.getName e player2.getName
-            //todo
+            System.out.println("Ha vinto il giocatore " +
+                    (isPlayer1Turn ? this.player1.getName() : this.player2.getName()));
             player1.onGameOver();
             player2.onGameOver();
         } else if (moveCount == 9) {
