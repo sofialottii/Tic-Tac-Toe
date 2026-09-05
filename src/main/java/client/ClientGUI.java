@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.Objects;
 
 public class ClientGUI extends JFrame {
 
@@ -20,10 +21,12 @@ public class ClientGUI extends JFrame {
 
     // Dati del client locale
     private final String localPlayerName;
+    private final String remotePlayerName;
 
     public ClientGUI(GameSession session, String gameName, String p1Name, String p2Name, String localPlayerName) {
         //riferimento alla partita
         this.localPlayerName = localPlayerName;
+        this.remotePlayerName = Objects.equals(localPlayerName, p1Name) ? p2Name : p1Name;
 
         setTitle("Distributed TTT - Client di " + localPlayerName);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,7 +179,7 @@ public class ClientGUI extends JFrame {
             }
         } else {
             // Partita in corso: chi deve giocare?
-            bottomStatusLabel.setText("Turno di " + activePlayerName);
+            bottomStatusLabel.setText("Turno di " + (Objects.equals(activePlayerName, "") ? remotePlayerName : activePlayerName));
             bottomStatusLabel.setForeground(Color.BLACK);
 
             if (activePlayerName.equals(p1NameLabel.getText())) {

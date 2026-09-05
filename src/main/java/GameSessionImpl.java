@@ -36,6 +36,7 @@ public class GameSessionImpl implements GameSession{
         this.player2 = player2;
 
         player1.opponentJoined(); //si sveglia l'avversario 1
+
         player1.onGameUpdate(this.board, isPlayer1Turn);
         player2.onGameUpdate(this.board, !isPlayer1Turn);
 
