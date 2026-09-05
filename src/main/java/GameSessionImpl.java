@@ -26,7 +26,7 @@ public class GameSessionImpl implements GameSession{
         this.player1 = player1;
         this.board = new String[9];
         for(int i = 0; i < 9; i++) {
-            board[i] = " ";
+            board[i] = "";
         }
         this.isPlayer1Turn = true;  //poi diventerà random se fede lo farà TODO
         this.moveCount = 0;
@@ -35,10 +35,10 @@ public class GameSessionImpl implements GameSession{
     public void addSecondPlayer(RemotePlayerListener player2) throws RemoteException {
         this.player2 = player2;
 
-        player1.opponentJoined(); //si sveglia l'avversario 1
+        player1.opponentJoined(player2.getName()); //si sveglia l'avversario 1
 
-        player1.onGameUpdate(this.board, isPlayer1Turn);
-        player2.onGameUpdate(this.board, !isPlayer1Turn);
+        player1.onGameUpdate(this.board, player1.getName());
+        player2.onGameUpdate(this.board, player1.getName());
 
     }
 
@@ -52,18 +52,19 @@ public class GameSessionImpl implements GameSession{
         moveCount++;
 
         if (checkWin(move)) {
-            System.out.println("Ha vinto il giocatore " +
-                    (isPlayer1Turn ? this.player1.getName() : this.player2.getName()));
-            player1.onGameOver();
-            player2.onGameOver();
+            String winner = isPlayer1Turn ? this.player1.getName() : this.player2.getName();
+            System.out.println("The winner is " + winner);
+            player1.onGameOver(board, winner);
+            player2.onGameOver(board, winner);
         } else if (moveCount == 9) {
             System.out.println("PARI");
-            player1.onGameOver();
-            player2.onGameOver();
+            player1.onGameOver(board, "Draw");
+            player2.onGameOver(board, "Draw");
         } else {
             isPlayer1Turn = !isPlayer1Turn;
-            player1.onGameUpdate(board, isPlayer1Turn);
-            player2.onGameUpdate(board, !isPlayer1Turn);
+            String activeName = isPlayer1Turn ? player1.getName() : player2.getName();
+            player1.onGameUpdate(board, activeName);
+            player2.onGameUpdate(board, activeName);
         }
 
     }
@@ -95,7 +96,7 @@ public class GameSessionImpl implements GameSession{
     @Override
     public String getPlayer2Name() throws RemoteException {
         if (this.player2 == null) {
-            return "In attesa...";
+            return "Waiting...";
         }
         return this.player2.getName();
     }

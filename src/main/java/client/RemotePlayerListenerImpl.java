@@ -17,27 +17,27 @@ public class RemotePlayerListenerImpl implements RemotePlayerListener {
     }
 
     @Override
-    public void opponentJoined() throws RemoteException {
-        System.out.println("Opponent found. The match is about to start.");
+    public void opponentJoined(String player2Name) throws RemoteException {
+        if (gui != null) {
+            SwingUtilities.invokeLater(() -> gui.updatePlayer2Name(player2Name));
+        }
     }
 
     @Override
-    public void onGameUpdate(String[] board, boolean isYourTurn) throws RemoteException {
+    public void onGameUpdate(String[] board, String activePlayerName) throws RemoteException {
         if (gui != null) {
-            String activePlayerName = isYourTurn ? playerName : "";
-
             SwingUtilities.invokeLater(() -> gui.updateGameState(board, activePlayerName, null));
         }
     }
 
+
     @Override
-    public String onGameOver() throws RemoteException {
+    public void onGameOver(String[] board, String winnerName) throws RemoteException {
         System.out.println("GAME FINISHED");
         if (gui != null) {
-            SwingUtilities.invokeLater(() -> gui.updateGameState(new String[9],
-                    "", "Fine Partita")); //da modificare TODO
+            SwingUtilities.invokeLater(() -> gui.updateGameState(
+                    board, "", winnerName));
         }
-        return "";
     }
 
     @Override

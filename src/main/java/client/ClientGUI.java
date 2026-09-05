@@ -5,25 +5,24 @@ import main.java.GameSession;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.Objects;
 
 public class ClientGUI extends JFrame {
 
     private final JLabel p1NameLabel;
-    private final JLabel p1StatusLabel; // Per "Attendi" / "È il tuo turno"
+    private final JLabel p1StatusLabel; //status: can be waiting or is your turn
     private final JLabel p2NameLabel;
-    private final JLabel p2StatusLabel; // Per "Attendi" / "È il tuo turno"
+    private final JLabel p2StatusLabel;
     private final JButton[] cells;
-    private final JLabel bottomStatusLabel;
+    private final JLabel bottomStatusLabel; //who's turn or who is the winner
 
     // Dati del client locale
     private final String localPlayerName;
     private final String remotePlayerName;
 
-    public ClientGUI(GameSession session, String gameName, String p1Name, String p2Name, String localPlayerName) {
+    public ClientGUI(GameSession session, String gameName, String p1Name, String p2Name, String localPlayerName)
+            throws RemoteException {
         //riferimento alla partita
         this.localPlayerName = localPlayerName;
         this.remotePlayerName = Objects.equals(localPlayerName, p1Name) ? p2Name : p1Name;
@@ -110,7 +109,7 @@ public class ClientGUI extends JFrame {
         JPanel p2Panel = new JPanel(new GridLayout(3, 1));
         p2Panel.setBackground(Color.WHITE);
         JLabel p2Label = new JLabel("Player 2:");
-        p2NameLabel = new JLabel(p2Name);
+        p2NameLabel = new JLabel(session.getPlayer2Name());
         p2StatusLabel = new JLabel("Attendi", SwingConstants.LEFT); // Testo default
 
         p2Label.setFont(new Font("SansSerif", Font.PLAIN, 22));
@@ -140,7 +139,12 @@ public class ClientGUI extends JFrame {
         setSize(700, 400);
         setLocationRelativeTo(null);
     }
-
+    public void updatePlayer2Name(String newName) {
+        p2NameLabel.setText(newName);
+        // Assicurati che l'interfaccia si ridisegni correttamente
+        p2NameLabel.revalidate();
+        p2NameLabel.repaint();
+    }
     /**
      * Metodo chiamato dal client RMI quando riceve un aggiornamento dal server.
      * Aggiorna passivamente l'interfaccia.

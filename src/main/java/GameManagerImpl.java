@@ -19,7 +19,7 @@ public class GameManagerImpl implements GameManager{
     public synchronized GameSession createGame(String gameName, RemotePlayerListener user1) throws RemoteException {
 
         if (pendingGames.containsKey(gameName)){
-            System.err.println("Nome partita già esistente");
+            System.err.println("Game name already existing");
             return null;
         } else {
 
@@ -37,7 +37,7 @@ public class GameManagerImpl implements GameManager{
     public synchronized GameSession joinGame(String gameName, RemotePlayerListener user2) throws RemoteException {
 
         if (!pendingGames.containsKey(gameName)) {
-            System.err.println("Partita non trovata o già iniziata");
+            System.err.println("Game not found or already started");
             return null;
         } else {
             GameSession gameStub = pendingGames.get(gameName);

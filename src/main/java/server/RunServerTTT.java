@@ -15,7 +15,7 @@ public class RunServerTTT {
             String hostIp = (args.length > 0) ? args[0] : InetAddress.getLocalHost().getHostAddress();
 
             System.setProperty("java.rmi.server.hostname", hostIp);
-            System.out.println("[Server] RMI Hostname configurato su: " + hostIp);
+            System.out.println("[Server] RMI Hostname configured on: " + hostIp);
 
             GameManager manager = new GameManagerImpl();
             var gameStub = (GameManager) UnicastRemoteObject.exportObject(manager, 0);
@@ -30,10 +30,10 @@ public class RunServerTTT {
             }
 
             registry.rebind("GameManager", gameStub );
-            System.out.println("[Server] Server Started e in ascolto");
+            System.out.println("[Server] Server Started and on listening");
 
         } catch (Exception e) {
-            System.err.println("exception:" + e.toString());
+            System.err.println("exception:" + e);
             e.printStackTrace();
         }
     }
