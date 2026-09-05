@@ -67,11 +67,12 @@ public class RunClientTTT {
 
                 ClientGUI client = null;
                 try {
-                    client = new ClientGUI(finalGame.getGameName(),
+                    client = new ClientGUI(finalGame, finalGame.getGameName(),
                             finalGame.getPlayer1Name(), finalGame.getPlayer2Name(), userName);
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
+                l.setGUI(client);
                 client.setVisible(true);
 
                 //simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server

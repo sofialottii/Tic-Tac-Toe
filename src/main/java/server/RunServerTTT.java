@@ -17,12 +17,13 @@ public class RunServerTTT {
 
             var gameStub = (GameManager) UnicastRemoteObject.exportObject(manager, 0);
 
+            //try creato in modo che se la porta è già in uso, viene liberata
             Registry registry;
             try {
-                // Prova a creare un nuovo registro RMI
+                //prova a creare un nuovo registro RMI
                 registry = LocateRegistry.createRegistry(1099);
             } catch (java.rmi.server.ExportException e) {
-                // Se la porta 1099 è già occupata, recupera il registro esistente
+                //se la porta 1099 è già occupata, recupera il registro esistente
                 registry = LocateRegistry.getRegistry(1099);
             }
 

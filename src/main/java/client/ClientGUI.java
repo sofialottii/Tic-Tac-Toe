@@ -1,10 +1,13 @@
 package main.java.client;
 
+import main.java.GameSession;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 public class ClientGUI extends JFrame {
 
@@ -19,8 +22,10 @@ public class ClientGUI extends JFrame {
 
     // Dati del client locale
     private String localPlayerName;
+    private GameSession session; //riferimento alla partita
 
-    public ClientGUI(String gameName, String p1Name, String p2Name, String localPlayerName) {
+    public ClientGUI(GameSession session, String gameName, String p1Name, String p2Name, String localPlayerName) {
+        this.session = session;
         this.localPlayerName = localPlayerName;
 
         setTitle("Distributed TTT - Client di " + localPlayerName);
@@ -85,11 +90,14 @@ public class ClientGUI extends JFrame {
             // L'azione del click: DEVE SOLO INVIARE LA RICHIESTA AL SERVER
             cells[i].addActionListener(e -> {
                 // Se la cella non è vuota, ignora il click
-                if (!cells[cellIndex].getText().isEmpty()) return;
+                if (!cells[cellIndex].getText().trim().isEmpty()) return;
 
-                // TODO: QUI INSERISCI LA CHIAMATA RMI AL SERVER
-                // Esempio: serverStub.makeMove(gameName, localPlayerName, cellIndex);
-                System.out.println("Richiesta mossa inviata al server per la cella: " + cellIndex);
+                try {
+                    // Chiama il metodo remoto sul server
+                    session.makeMove(cellIndex);
+                } catch (RemoteException ex) {
+                    System.err.println("Errore di connessione durante la mossa: " + ex.getMessage());
+                }
             });
 
             boardPanel.add(cells[i]);
@@ -144,6 +152,7 @@ public class ClientGUI extends JFrame {
     public void updateGameState(String[] boardArray, String activePlayerName, String winnerName) {
         // 1. Aggiorna la griglia
         for (int i = 0; i < 9; i++) {
+            String val = boardArray[i] == null ? " " : boardArray[i];
             cells[i].setText(boardArray[i]);
             if (boardArray[i].equals("X")) {
                 cells[i].setForeground(Color.BLUE);
@@ -194,22 +203,3 @@ public class ClientGUI extends JFrame {
         }
     }
 }
-
-    // MAIN per testare graficamente il Client
-/*    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Immaginiamo di essere il client di "Marco"
-            ClientGUI client = new ClientGUI("bombo clat", "Luca", "Marco", "Marco");
-            client.setVisible(true);
-
-            // Simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
-            Timer timer = new Timer(1000, e -> {
-                String[] fakeBoard = {"", "", "", "", "", "", "", "", "X"};
-                // Passo "Marco" come giocatore attivo, quindi i bottoni si abiliteranno
-                client.updateGameState(fakeBoard, "Marco", null);
-            });
-            timer.setRepeats(false);
-            timer.start();
-        });
-    }
-}*/

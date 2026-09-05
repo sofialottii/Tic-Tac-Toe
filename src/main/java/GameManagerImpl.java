@@ -16,7 +16,7 @@ public class GameManagerImpl implements GameManager{
     }
 
     @Override
-    public GameSession createGame(String gameName, RemotePlayerListener user1) throws RemoteException {
+    public synchronized GameSession createGame(String gameName, RemotePlayerListener user1) throws RemoteException {
 
         if (pendingGames.containsKey(gameName)){
             System.err.println("Nome partita già esistente");
@@ -34,7 +34,7 @@ public class GameManagerImpl implements GameManager{
     }
 
     @Override
-    public GameSession joinGame(String gameName, RemotePlayerListener user2) throws RemoteException {
+    public synchronized GameSession joinGame(String gameName, RemotePlayerListener user2) throws RemoteException {
 
         if (!pendingGames.containsKey(gameName)) {
             System.err.println("Partita non trovata o già iniziata");
