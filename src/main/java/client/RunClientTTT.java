@@ -37,8 +37,9 @@ public class RunClientTTT {
                 mode = myObj.nextLine();
             } while (!Objects.equals(mode, "c") && !Objects.equals(mode, "j"));
 
-            String roomName;
-            GameSession game;
+            String roomName; //nome del match che verrà creato, scelto dall'utente
+            GameSession game; //creazione del match effettivo
+
             //se la modalità è creare:
             if (mode.equals("c")) {
                 System.out.println("Choose room's name: ");
@@ -60,9 +61,10 @@ public class RunClientTTT {
                 }
             }
 
+            //creazione della GUI
             GameSession finalGame = game;
             SwingUtilities.invokeLater(() -> {
-                // Immaginiamo di essere il client di "Marco"
+
                 ClientGUI client = null;
                 try {
                     client = new ClientGUI(finalGame.getGameName(),
@@ -72,10 +74,10 @@ public class RunClientTTT {
                 }
                 client.setVisible(true);
 
-                // Simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
+                //simulo un ritardo di 1 secondo, poi ricevo lo stato iniziale dal server
                 ClientGUI finalClient = client;
                 Timer timer = new Timer(1000, e -> {
-                    // Passo "Marco" come giocatore attivo, quindi i bottoni si abiliteranno
+
                     try {
                         finalClient.updateGameState(finalGame.getBoard(),
                                 finalGame.isPlayer1Turn() ? finalGame.getPlayer1Name() : finalGame.getPlayer2Name(),
@@ -93,8 +95,5 @@ public class RunClientTTT {
             System.err.println(e);
             e.printStackTrace();
         }
-
-
-
     }
 }
